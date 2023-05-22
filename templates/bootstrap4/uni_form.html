@@ -1,0 +1,21 @@
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+<form method="post" class="form-horizontal">
+  {% csrf_token %}
+  
+  {% for field in form %}
+    <div class="form-group">
+      <label class="col-form-label">{{ field.label }}</label>
+      <div>
+        {{ field|as_crispy_field }}
+      </div>
+    </div>
+  {% endfor %}
+
+  <div class="form-group">
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-primary">Create Recipe</button>
+    </div>
+  </div>
+</form>

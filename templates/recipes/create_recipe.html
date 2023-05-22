@@ -1,0 +1,42 @@
+<!-- create_recipe.html -->
+{% extends 'recipes/base.html' %}
+
+{% block content %}
+  <form method="post" class="my-form">
+    {% csrf_token %}
+    <h2 class="form-title">Create Recipe</h2>
+
+    <div class="form-field">
+      <label for="{{ form.title.id_for_label }}">Title:</label>
+      {{ form.title }}
+    </div>
+
+    <div class="form-field">
+      <label for="{{ form.category.id_for_label }}">Category:</label>
+      {{ form.category }}
+    </div>
+
+    <div class="form-field">
+      <label>Author:</label>
+      <input type="text" value="{{ request.user.username }}" readonly>
+    </div>
+
+    <div class="form-field">
+      <label for="{{ form.description.id_for_label }}">Description:</label>
+      {{ form.description }}
+    </div>
+
+    <div class="form-field">
+      <label for="{{ form.ingredients.id_for_label }}">Ingredients:</label>
+      {{ form.ingredients }}
+    </div>
+
+    <div class="form-field">
+      <label for="{{ form.instructions.id_for_label }}">Instructions:</label>
+      {{ form.instructions }}
+    </div>
+
+  <button type="submit" class="submit-button">Create Recipe</button>
+
+  </form>
+{% endblock %}
