@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -5,9 +7,9 @@ from django.urls import reverse
 
 class Category(models.Model):
     CATEGORY_CHOICES = [
-        ('cat1', 'Semplice'),
-        ('cat2', 'Normale'),
-        ('cat3', 'Impegnativa'),
+        ('Easy', 'Easy'),
+        ('Medium', 'Medium'),
+        ('Hard', 'Hard'),
     ]
 
     name = models.CharField(max_length=100, choices=CATEGORY_CHOICES)

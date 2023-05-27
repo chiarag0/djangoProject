@@ -2,10 +2,12 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.auth.models import User
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from . import models
 from .forms import RecipeForm
+from django.contrib.auth.decorators import login_required
 
 """"
 def create_recipe(request):
@@ -40,7 +42,7 @@ def home(request):
 
 
 def about(request):
-    return render(request, 'recipes/about.html', {'title': 'about page'})
+    return render(request, 'recipes/recipe_detail.html', {'title': 'about page'})   #TODO
 
 
 class RecipeListView(ListView):
@@ -51,16 +53,7 @@ class RecipeListView(ListView):
 
 class RecipeDetailView(DetailView):
     model = models.Recipe
-
-
-class RecipeListView(ListView):
-    model = models.Recipe
-    template_name = 'recipes/home.html'
-    context_object_name = 'recipes'
-
-
-class RecipeDetailView(DetailView):
-    model = models.Recipe
+    template_name = 'recipes/recipe_detail.html'
 
 
 class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -99,3 +92,9 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+
+def user_recipes(request, username):
+    user = User.objects.get(username=username)
+    recipes = models.Recipe.objects.filter(user=user)
+    return render(request, 'recipes/recipe_list.html', {'user': user, 'recipes': recipes})

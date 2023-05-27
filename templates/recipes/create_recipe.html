@@ -1,8 +1,7 @@
-<!-- create_recipe.html -->
 {% extends 'recipes/base.html' %}
 
 {% block content %}
-  <form method="post" class="my-form">
+  <form method="post" action="{% url 'recipes-create' %}" class="my-form">
     {% csrf_token %}
     <h2 class="form-title">Create Recipe</h2>
 
@@ -14,11 +13,6 @@
     <div class="form-field">
       <label for="{{ form.category.id_for_label }}">Category:</label>
       {{ form.category }}
-    </div>
-
-    <div class="form-field">
-      <label>Author:</label>
-      <input type="text" value="{{ request.user.username }}" readonly>
     </div>
 
     <div class="form-field">
@@ -36,7 +30,25 @@
       {{ form.instructions }}
     </div>
 
-  <button type="submit" class="submit-button">Create Recipe</button>
-
+    <button type="submit" class="submit-button">Create Recipe</button>
   </form>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+  $(document).ready(function() {
+    $('.my-form').submit(function(event) {
+      event.preventDefault();
+      var ingredientsInput = $('#id_ingredients');
+      var ingredientsList = ingredientsInput.val().split('\n');
+      // Remove any empty lines from the list
+      ingredientsList = ingredientsList.filter(function(ingredient) {
+        return ingredient.trim() !== '';
+      });
+      // Set the input value as the JSON string representation of the list
+      ingredientsInput.val(JSON.stringify(ingredientsList));
+      // Submit the form
+      this.submit();
+    });
+  });
+  </script>
 {% endblock %}

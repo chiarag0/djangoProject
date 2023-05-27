@@ -1,11 +1,29 @@
 {% extends "recipes/base.html" %}
 <!-- -->
+{% load static %}
+<!-- -->
 {% load crispy_forms_tags %}
 <!-- -->
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+
 {% block content %}
-<div class="container">
-  <h1>{{ user.username}}</h1>
+<div class="profile_container">
+    <h3> {{ user.username}} </h3>
+      <h1>My profile</h1>
+        <div class="card my-4">
+          <h2>Recipes created by me</h2>
+            {% if recipes %}
+              <ul>
+                {% for recipe in recipes %}
+                <li><a href="{% url 'recipes-detail' recipe.pk %}">{{ recipe.title }}</a></li>
+                {% endfor %}
+              </ul>
+            {% else %}
+                <h4>Looks like you haven't created any recipes yet!</h4>
+            {% endif %}
+        </div>
 </div>
 
 <!-- -->
 {% endblock content %}
+

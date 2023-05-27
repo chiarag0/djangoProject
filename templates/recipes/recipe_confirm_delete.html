@@ -1,4 +1,5 @@
 {% extends "recipes/base.html" %}
+{% load crispy_forms_filters %}
 <!-- -->
 {% load crispy_forms_tags %}
 <!-- -->
@@ -7,7 +8,7 @@
   <form method="POST">
     {% csrf_token %}
     <fieldset class="form-group">
-      <legend class="mb-4">Are you sure you want to delete?</legend>
+      <legend class="mb-4">Are you sure you want to delete this recipe?</legend>
       <h2>{{object}}</h2>
       {{ form|crispy }}
     </fieldset>
