@@ -21,12 +21,23 @@ class Category(models.Model):
         app_label = 'recipes'
 
 
+class Ingredient(models.Model):
+    name = models.CharField(max_length=125)
+    amount = models.CharField(max_length=250, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        app_label = 'recipes'
+
+
 class Recipe(models.Model):
     title = models.CharField(max_length=200)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField()
-    ingredients = models.TextField()
+    ingredients = models.ManyToManyField(Ingredient, related_name='recipes')
     instructions = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -36,3 +47,6 @@ class Recipe(models.Model):
 
     def get_absolute_url(self):
         return reverse("recipes-detail", kwargs={"pk": self.pk})
+
+
+

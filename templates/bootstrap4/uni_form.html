@@ -5,7 +5,7 @@
 <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
 
 
-<form method="post" class="form-horizontal">
+<form method="POST" class="form-horizontal">
   {% csrf_token %}
   
   {% for field in form %}

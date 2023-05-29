@@ -1,7 +1,7 @@
 {% extends 'recipes/base.html' %}
 
 {% block content %}
-  <form method="post" action="{% url 'recipes-create' %}" class="my-form">
+  <form method="POST" action="{% url 'recipes-create' %}" class="my-form">
     {% csrf_token %}
     <h2 class="form-title">Create Recipe</h2>
 
@@ -20,10 +20,28 @@
       {{ form.description }}
     </div>
 
-    <div class="form-field">
-      <label for="{{ form.ingredients.id_for_label }}">Ingredients:</label>
-      {{ form.ingredients }}
+     <div id="ingredient-fields">
+        <div class="form-field">
+            <label for="{{ form.ingredients.id_for_label }}">Ingredients:</label>
+
+            <div id="ingredient-container">
+                <div class="ingredient-field">
+                    <div class="ingredient-input">
+                        <label for="id_ingredients">Ingredient:</label>
+                        <input type="text" name="ingredients" id="id_ingredients" value="{{ ingredient.name }}">
+                    </div>
+                    <div class="ingredient-input">
+                        <label for="id_quantity">Quantity:</label>
+                        <input type="text" name="quantity" id="id_quantity" value="{{ ingredient.amount }}">
+                    </div>
+                    <button type="button" class="remove-ingredient">Remove</button>
+                </div>
+            </div>
+            <button type="button" id="add-ingredient">Add Ingredient</button>
+        </div>
     </div>
+
+
 
     <div class="form-field">
       <label for="{{ form.instructions.id_for_label }}">Instructions:</label>
@@ -31,24 +49,74 @@
     </div>
 
     <button type="submit" class="submit-button">Create Recipe</button>
+
+    <div class="border-top pt-3">
+      <a class="text-muted" href="{% url 'recipes-home' %}">Cancel</a>
+    </div>
+
   </form>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
   <script>
-  $(document).ready(function() {
-    $('.my-form').submit(function(event) {
-      event.preventDefault();
-      var ingredientsInput = $('#id_ingredients');
-      var ingredientsList = ingredientsInput.val().split('\n');
-      // Remove any empty lines from the list
-      ingredientsList = ingredientsList.filter(function(ingredient) {
-        return ingredient.trim() !== '';
+      document.addEventListener("DOMContentLoaded", function() {
+      const ingredientContainer = document.getElementById("ingredient-container");
+      const addIngredientBtn = document.getElementById("add-ingredient");
+
+      function createIngredientField() {
+        const ingredientField = document.createElement("div");
+        ingredientField.classList.add("ingredient-field");
+
+        const ingredientInput = document.createElement("div");
+        ingredientInput.classList.add("ingredient-input");
+
+        const ingredientLabel = document.createElement("label");
+        ingredientLabel.setAttribute("for", "id_ingredients");
+        ingredientLabel.textContent = "Ingredient:";
+
+        const ingredientInputField = document.createElement("input");
+        ingredientInputField.setAttribute("type", "text");
+        ingredientInputField.setAttribute("name", "ingredients");
+        ingredientInputField.setAttribute("id", "id_ingredients");
+
+        ingredientInput.appendChild(ingredientLabel);
+        ingredientInput.appendChild(ingredientInputField);
+
+        const quantityInput = document.createElement("div");
+        quantityInput.classList.add("ingredient-input");
+
+        const quantityLabel = document.createElement("label");
+        quantityLabel.setAttribute("for", "id_quantity");
+        quantityLabel.textContent = "Quantity:";
+
+        const quantityInputField = document.createElement("input");
+        quantityInputField.setAttribute("type", "text");
+        quantityInputField.setAttribute("name", "quantity");
+        quantityInputField.setAttribute("id", "id_quantity");
+
+        quantityInput.appendChild(quantityLabel);
+        quantityInput.appendChild(quantityInputField);
+
+        const removeBtn = document.createElement("button");
+        removeBtn.setAttribute("type", "button");
+        removeBtn.classList.add("remove-ingredient");
+        removeBtn.textContent = "Remove";
+        removeBtn.addEventListener("click", function() {
+          ingredientField.remove();
+        });
+
+        ingredientField.appendChild(ingredientInput);
+        ingredientField.appendChild(quantityInput);
+        ingredientField.appendChild(removeBtn);
+
+        return ingredientField;
+      }
+
+      addIngredientBtn.addEventListener("click", function() {
+        const ingredientField = createIngredientField();
+        ingredientContainer.appendChild(ingredientField);
       });
-      // Set the input value as the JSON string representation of the list
-      ingredientsInput.val(JSON.stringify(ingredientsList));
-      // Submit the form
-      this.submit();
     });
-  });
+
   </script>
+
 {% endblock %}
