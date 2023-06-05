@@ -7,7 +7,6 @@ from recipes.models import Recipe
 from . import forms
 
 
-# Create your views here.
 def register(request):
     if request.method == "POST":
         form = forms.UserRegisterForm(request.POST)

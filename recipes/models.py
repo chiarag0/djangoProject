@@ -9,7 +9,7 @@ class Category(models.Model):
     CATEGORY_CHOICES = [
         ('Easy', 'Easy'),
         ('Medium', 'Medium'),
-        ('Hard', 'Hard'),
+        ('Challenging', 'Challenging'),
     ]
 
     name = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
@@ -22,8 +22,8 @@ class Category(models.Model):
 
 
 class Ingredient(models.Model):
-    name = models.CharField(max_length=125)
-    amount = models.CharField(max_length=250, blank=True, null=True)
+    name = models.CharField(max_length=250)
+    quantity = models.CharField(max_length=250, blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -38,7 +38,7 @@ class Recipe(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     description = models.TextField()
     ingredients = models.ManyToManyField(Ingredient, related_name='recipes')
-    instructions = models.TextField()
+    instructions = models.ManyToManyField('Instruction', related_name='recipes', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -49,4 +49,11 @@ class Recipe(models.Model):
         return reverse("recipes-detail", kwargs={"pk": self.pk})
 
 
+class Instruction(models.Model):
+    step = models.TextField()
 
+    def __str__(self):
+        return self.step
+
+    class Meta:
+        app_label = 'recipes'

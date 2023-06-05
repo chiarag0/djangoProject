@@ -12,6 +12,10 @@
           crossorigin="anonymous"
     >
 
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+
+
+
     {% if title %}
     <title>TasteBuds- {{title}}</title>
     {% else %}
@@ -59,7 +63,7 @@
           <a class="nav-item nav-link" href="{% url 'user-profile' %}"
             >My Profile</a
           >
-          <a class="nav-item nav-link" href="{% url 'user-logout' %}">Logout</a>
+          <a class="nav-item nav-link" href="{% url 'user-login' %}">Logout</a>
           {% else %}
           <a class="nav-item nav-link" href="{% url 'user-login' %}">Login</a>
           <a class="nav-item nav-link" href="{% url 'user-register' %}"

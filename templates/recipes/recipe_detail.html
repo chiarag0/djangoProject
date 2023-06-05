@@ -10,17 +10,18 @@
     <p class="card-text">{{ object.category }}</p>
     <p class="card-text">{{ object.description }}</p>
     <p class="card-text">
-      <h3>Ingredients:</h3>
-          <ul>
-            {% for ingredient in recipe.ingredients.all %}
-              <li>{{ ingredient.name }} - {{ ingredient.amount }}</li>
-            {% endfor %}
-          </ul>
-
+        <h3>Ingredients:</h3>
+        {% for ingredient in ingredients %}
+            <p>{{ ingredient }}</p>
+        {% endfor %}
+    </p>
 
     <p class="card-text">
         <h3>Instructions:</h3>
-        <p>{{ object.instructions }}</p>
+        {% for instruction in instructions %}
+            <p>{{ instruction }}</p>
+        {% endfor %}
+    </p>
 
     <h6 class="card-subtitle mb-2 text-muted">
       {{ object.updated_at|date:"F d, Y" }}

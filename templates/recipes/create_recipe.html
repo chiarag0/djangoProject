@@ -11,6 +11,11 @@
     </div>
 
     <div class="form-field">
+      <label for="{{ form.author.id_for_label }}">Author:</label>
+      {{ form.author }}
+    </div>
+
+    <div class="form-field">
       <label for="{{ form.category.id_for_label }}">Category:</label>
       {{ form.category }}
     </div>
@@ -20,35 +25,31 @@
       {{ form.description }}
     </div>
 
-     <div id="ingredient-fields">
-        <div class="form-field">
-            <label for="{{ form.ingredients.id_for_label }}">Ingredients:</label>
+     <div class="form-field">
+         <label for="{{ form.ingredients.id_for_label }}">Ingredients:</label>
 
-            <div id="ingredient-container">
-                <div class="ingredient-field">
-                    <div class="ingredient-input">
-                        <label for="id_ingredients">Ingredient:</label>
-                        <input type="text" name="ingredients" id="id_ingredients" value="{{ ingredient.name }}">
-                    </div>
-                    <div class="ingredient-input">
-                        <label for="id_quantity">Quantity:</label>
-                        <input type="text" name="quantity" id="id_quantity" value="{{ ingredient.amount }}">
-                    </div>
-                    <button type="button" class="remove-ingredient">Remove</button>
-                </div>
-            </div>
-            <button type="button" id="add-ingredient">Add Ingredient</button>
-        </div>
-    </div>
-
-
+         <div id="ingredient-container">
+              <div class="ingredient-field">
+                 <div class="ingredient-input">
+                    <label for="id_name">Ingredient:</label>
+                    <input type="text" name="name" id="id_name">
+                 </div>
+                 <div class="ingredient-input">
+                    <label for="id_quantity">Quantity:</label>
+                    <input type="text" name="quantity" id="id_quantity">
+                 </div>
+                 <button type="button" class="remove-ingredient">Remove</button>
+              </div>
+              <button type="button" id="add-ingredient" class="add-ingredient">Add Ingredient</button>
+         </div>
+     </div>
 
     <div class="form-field">
       <label for="{{ form.instructions.id_for_label }}">Instructions:</label>
       {{ form.instructions }}
     </div>
 
-    <button type="submit" class="submit-button">Create Recipe</button>
+    <button type="submit" class="btn btn-primary">Create Recipe</button>
 
     <div class="border-top pt-3">
       <a class="text-muted" href="{% url 'recipes-home' %}">Cancel</a>
@@ -70,13 +71,13 @@
         ingredientInput.classList.add("ingredient-input");
 
         const ingredientLabel = document.createElement("label");
-        ingredientLabel.setAttribute("for", "id_ingredients");
+        ingredientLabel.setAttribute("for", "id_name");
         ingredientLabel.textContent = "Ingredient:";
 
         const ingredientInputField = document.createElement("input");
         ingredientInputField.setAttribute("type", "text");
-        ingredientInputField.setAttribute("name", "ingredients");
-        ingredientInputField.setAttribute("id", "id_ingredients");
+        ingredientInputField.setAttribute("name", "name");
+        ingredientInputField.setAttribute("id", "id_name");
 
         ingredientInput.appendChild(ingredientLabel);
         ingredientInput.appendChild(ingredientInputField);
