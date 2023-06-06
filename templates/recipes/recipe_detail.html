@@ -6,9 +6,10 @@
 <div class="card my-4">
   <div class="card-body">
     <h5 class="card-title">{{ object.title }}</h5>
-    <h6 class="card-subtitle mb-2 text-muted">{{ object.author }}</h6>
-    <p class="card-text">{{ object.category }}</p>
-    <p class="card-text">{{ object.description }}</p>
+
+    <h6 class="card-subtitle mb-2 text-muted">{{ recipe.author }}</h6>
+    <p class="card-text">{{ recipe.category }}</p>
+    <p class="card-text">{{ recipe.description }}</p>
     <p class="card-text">
         <h3>Ingredients:</h3>
         {% for ingredient in ingredients %}
@@ -18,17 +19,17 @@
 
     <p class="card-text">
         <h3>Instructions:</h3>
-        {% for instruction in instructions %}
+        {% for instruction in ingredients %}
             <p>{{ instruction }}</p>
         {% endfor %}
     </p>
 
     <h6 class="card-subtitle mb-2 text-muted">
-      {{ object.updated_at|date:"F d, Y" }}
+      {{ recipe.updated_at|date:"F d, Y" }}
     </h6>
   </div>
 </div>
-{% if object.author == user or user.is_staff %}
+{% if recipe.author == user or user.is_staff %}
 <div class="col-4">
     <a class="btn btn-outline-info" href="{% url 'recipes-update' object.id %}">Update</a>
     <a class="btn btn-outline-danger" href="{% url 'recipes-delete' object.id %}">Delete</a>

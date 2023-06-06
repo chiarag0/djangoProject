@@ -22,6 +22,7 @@ class Category(models.Model):
 
 
 class Ingredient(models.Model):
+    recipe = models.ForeignKey('recipes.Recipe', on_delete=models.CASCADE, null=True)
     name = models.CharField(max_length=250)
     quantity = models.CharField(max_length=250, blank=True, null=True)
 

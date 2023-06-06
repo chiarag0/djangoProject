@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
+
 
 from recipes.models import Recipe
 from . import forms
@@ -25,3 +26,16 @@ def register(request):
 def profile(request):
     recipes = Recipe.objects.filter(author=request.user)
     return render(request, 'users/profile.html', {'recipes': recipes})
+
+
+'''
+@login_required
+def add_to_favorites(request, pk):
+    recipe = get_object_or_404(Recipe, pk=pk)
+    request.user.favorites.add(recipe)
+    return redirect('recipe-detail', pk=pk)
+
+
+def view_favorites(request):
+    favorites = request.user.favorites.all()
+    return render(request, 'recipes/../templates/users/favorites.html', {'favorites': favorites}) '''

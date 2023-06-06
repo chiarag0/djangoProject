@@ -1,4 +1,4 @@
-from django.forms import formset_factory
+from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -9,6 +9,8 @@ from crispy_forms.layout import Submit
 from . import models
 from .forms import RecipeForm, IngredientForm
 from django.contrib.auth.decorators import login_required
+
+from .models import Recipe, Ingredient
 
 """"
 def create_recipe(request):
@@ -42,10 +44,6 @@ def home(request):
     return render(request, 'recipes/home.html', context)
 
 
-def about(request):
-    return render(request, 'recipes/recipe_detail.html', {'title': 'about page'})   #TODO
-
-
 class RecipeListView(ListView):
     model = models.Recipe
     template_name = 'recipes/home.html'
@@ -55,12 +53,11 @@ class RecipeListView(ListView):
 class RecipeDetailView(DetailView):
     model = models.Recipe
     template_name = 'recipes/recipe_detail.html'
+    context_object_name = 'recipe'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        recipe = self.get_object()
-        context['ingredients'] = recipe.ingredients.all()
-        context['instructions'] = recipe.instructions.all()
+        context['ingredients'] = Ingredient.objects.filter(recipe=self.object)
         return context
 
 
@@ -88,7 +85,6 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
         self.object = form.save()
         return super().form_valid(form)
 
-
     def get_success_url(self):
         pk = self.object.pk
         print(pk)
@@ -96,9 +92,14 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
 
 
 class IngredientsCreateView(CreateView):
-    model = models.Ingredient
-    fields = ['name', 'quantity']
+
+    form_class = IngredientForm
     template_name = 'recipes/create_recipe_ingredients.html'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['ingredient_prefix'] = 'ingredient'  # Imposta un prefisso univoco per ogni ingrediente
+        return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -107,11 +108,30 @@ class IngredientsCreateView(CreateView):
 
     def form_valid(self, form):
         recipe_pk = self.kwargs['pk']
-        recipe = models.Recipe.objects.get(pk=recipe_pk)
-        ingredient = form.save(commit=False)
-        ingredient.recipe = recipe
-        ingredient.save()
+        recipe = Recipe.objects.get(pk=recipe_pk)
+
+        # Salva tutti gli ingredienti associati alla ricetta
+        ingredients_data = self.get_ingredients_data()
+        for ingredient_data in ingredients_data:
+            ingredient = Ingredient(recipe=recipe, **ingredient_data)
+            ingredient.save()
+
         return super().form_valid(form)
+
+    def get_ingredients_data(self):
+        ingredients_data = []
+        prefix = self.request.POST.get('ingredient-prefix')
+        ingredient_count = int(self.request.POST.get('ingredient-count', 0))
+
+        for i in range(ingredient_count):
+            ingredient_data = {
+                'name': self.request.POST.get(f'{prefix}-{i}-name'),
+                'quantity': self.request.POST.get(f'{prefix}-{i}-quantity')
+            }
+            ingredients_data.append(ingredient_data)
+
+        return ingredients_data
+
 
     def get_success_url(self):
         recipe_pk = self.kwargs['pk']

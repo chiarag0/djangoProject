@@ -18,6 +18,11 @@ class IngredientForm(forms.ModelForm):
         model = Ingredient
         fields = ['name', 'quantity']
 
+    def __init__(self, *args, **kwargs):
+        ingredient_prefix = kwargs.pop('ingredient_prefix')
+        super().__init__(*args, **kwargs)
+        self.prefix = ingredient_prefix
+
 
 class InstructionForm(forms.ModelForm):
     step = forms.CharField(widget=forms.TextInput(attrs={'class': 'custom-input'}))
