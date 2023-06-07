@@ -51,6 +51,7 @@ class Recipe(models.Model):
 
 
 class Instruction(models.Model):
+    recipe = models.ForeignKey('recipes.Recipe', on_delete=models.CASCADE, null=True)
     step = models.TextField()
 
     def __str__(self):

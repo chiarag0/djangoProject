@@ -88,18 +88,12 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
     def get_success_url(self):
         pk = self.object.pk
         print(pk)
-        return reverse_lazy('ingredients-create', kwargs={'pk': pk})
+        return reverse_lazy('ingredients-list', kwargs={'pk': pk})
 
 
 class IngredientsCreateView(CreateView):
-
     form_class = IngredientForm
     template_name = 'recipes/create_recipe_ingredients.html'
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['ingredient_prefix'] = 'ingredient'  # Imposta un prefisso univoco per ogni ingrediente
-        return kwargs
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -110,32 +104,35 @@ class IngredientsCreateView(CreateView):
         recipe_pk = self.kwargs['pk']
         recipe = Recipe.objects.get(pk=recipe_pk)
 
-        # Salva tutti gli ingredienti associati alla ricetta
-        ingredients_data = self.get_ingredients_data()
-        for ingredient_data in ingredients_data:
-            ingredient = Ingredient(recipe=recipe, **ingredient_data)
-            ingredient.save()
-
+        ingredient = form.save(commit=False)
         return super().form_valid(form)
-
-    def get_ingredients_data(self):
-        ingredients_data = []
-        prefix = self.request.POST.get('ingredient-prefix')
-        ingredient_count = int(self.request.POST.get('ingredient-count', 0))
-
-        for i in range(ingredient_count):
-            ingredient_data = {
-                'name': self.request.POST.get(f'{prefix}-{i}-name'),
-                'quantity': self.request.POST.get(f'{prefix}-{i}-quantity')
-            }
-            ingredients_data.append(ingredient_data)
-
-        return ingredients_data
-
 
     def get_success_url(self):
         recipe_pk = self.kwargs['pk']
-        return reverse_lazy('instructions-create', kwargs={'pk': recipe_pk})
+        return reverse_lazy('ingredients-list', kwargs={'pk': recipe_pk})
+
+
+class IngredientsListView(ListView):
+    model = Ingredient
+    template_name = 'recipes/ingredients_list.html'
+    context_object_name = 'ingredients'
+
+    def get_queryset(self):
+        recipe_pk = self.kwargs['pk']
+        recipe = Recipe.objects.get(pk=recipe_pk)
+        return Ingredient.objects.filter(recipe=recipe)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recipe'] = Recipe.objects.get(pk=self.kwargs['pk'])
+        recipe_pk = self.kwargs['pk']
+        recipe = Recipe.objects.get(pk=recipe_pk)
+        context['ingredients'] = Ingredient.objects.filter(recipe=recipe)
+        return context
+
+    def get_success_url(self):
+        recipe_pk = self.kwargs['pk']
+        return reverse_lazy('instructions-list', kwargs={'pk': recipe_pk})
 
 
 class InstructionsCreateView(CreateView):
@@ -157,6 +154,28 @@ class InstructionsCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
+        return reverse_lazy('instructions-list', kwargs={'pk': self.kwargs['pk']})
+
+class InstructionsListView(ListView):
+    model = models.Instruction
+    template_name = 'recipes/instructions_list.html'
+    context_object_name = 'instructions'
+
+    def get_queryset(self):
+        recipe_pk = self.kwargs['pk']
+        recipe = models.Recipe.objects.get(pk=recipe_pk)
+        return models.Instruction.objects.filter(recipe=recipe)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recipe'] = models.Recipe.objects.get(pk=self.kwargs['pk'])
+        recipe_pk = self.kwargs['pk']
+        recipe = models.Recipe.objects.get(pk=recipe_pk)
+        context['instructions'] = models.Instruction.objects.filter(recipe=recipe)
+        return context
+
+    def get_success_url(self):
+        recipe_pk = self.kwargs['pk']
         return reverse_lazy('recipes-home')
 
 '''
