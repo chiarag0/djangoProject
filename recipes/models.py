@@ -59,3 +59,14 @@ class Instruction(models.Model):
 
     class Meta:
         app_label = 'recipes'
+
+
+# class Tag(models.Model):
+#     recipe = models.ForeignKey('recipes.Recipe', on_delete=models.CASCADE, null=True)
+#     name = models.CharField(max_length=100)
+#
+#     def __str__(self):
+#         return self.name
+#
+#     class Meta:
+#         app_label = 'recipes'

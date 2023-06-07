@@ -103,8 +103,7 @@ class IngredientsCreateView(CreateView):
     def form_valid(self, form):
         recipe_pk = self.kwargs['pk']
         recipe = Recipe.objects.get(pk=recipe_pk)
-
-        ingredient = form.save(commit=False)
+        form.instance.recipe = recipe
         return super().form_valid(form)
 
     def get_success_url(self):
@@ -216,10 +215,12 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
         return super().form_invalid(form)
 
 '''
+
+
 class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = models.Recipe
     fields = ['title', 'author', 'category', 'description', 'instructions']
-    template_name = 'recipes/create_recipe.html'
+    template_name = 'recipes/create_recipe.html'   #TODO
 
     def test_func(self):
         recipe = self.get_object()
