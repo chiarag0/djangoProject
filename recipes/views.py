@@ -153,7 +153,9 @@ class InstructionsCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('instructions-list', kwargs={'pk': self.kwargs['pk']})
+        recipe_pk = self.kwargs['pk']
+        return reverse_lazy('instructions-list',  kwargs={'pk': recipe_pk})
+
 
 class InstructionsListView(ListView):
     model = models.Instruction
@@ -175,7 +177,7 @@ class InstructionsListView(ListView):
 
     def get_success_url(self):
         recipe_pk = self.kwargs['pk']
-        return reverse_lazy('recipes-home')
+        return reverse_lazy('tags-list', kwargs={'pk': recipe_pk})
 
 '''
 
@@ -220,7 +222,7 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
 class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = models.Recipe
     fields = ['title', 'author', 'category', 'description', 'instructions']
-    template_name = 'recipes/create_recipe.html'   #TODO
+    template_name = 'recipes/update_recipe.html'   #TODO
 
     def test_func(self):
         recipe = self.get_object()
@@ -229,6 +231,81 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super().form_valid(form)
+
+
+class TagsCreateView(CreateView):
+    model = models.Tag
+    fields = ['name']
+    template_name = 'recipes/create_recipe_tags.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recipe'] = models.Recipe.objects.get(pk=self.kwargs['pk'])
+        return context
+
+    def form_valid(self, form):
+        recipe_pk = self.kwargs['pk']
+        recipe = models.Recipe.objects.get(pk=recipe_pk)
+        tag = form.save(commit=False)
+        tag.recipe = recipe
+        tag.save()
+        return super().form_valid(form)
+
+    #print errors if form not valid
+    def form_invalid(self, form):
+        # Print form errors
+        print(form.errors)
+
+        # Print non-field errors
+        print(form.non_field_errors())
+
+        # Return the default behavior
+        return super().form_invalid(form)
+
+    def get_success_url(self):
+        return reverse_lazy('tags-list', kwargs={'pk': self.kwargs['pk']})
+
+
+class TagsListView(ListView):
+    model = models.Tag
+    template_name = 'recipes/tags_list.html'
+    context_object_name = 'tags'
+
+    def get_queryset(self):
+        recipe_pk = self.kwargs['pk']
+        recipe = models.Recipe.objects.get(pk=recipe_pk)
+        return models.Tag.objects.filter(recipe=recipe)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['recipe'] = models.Recipe.objects.get(pk=self.kwargs['pk'])
+        recipe_pk = self.kwargs['pk']
+        recipe = models.Recipe.objects.get(pk=recipe_pk)
+        context['tags'] = models.Tag.objects.filter(recipe=recipe)
+        return context
+
+    def get_success_url(self):
+        recipe_pk = self.kwargs['pk']
+        return reverse_lazy('recipes-detail', kwargs={'pk': recipe_pk})
+
+
+# class SearchByTag(ListView):   #TODO!!!!!!!!!!!!!!!!!!!!!!!
+#     model = models.Tag
+#    # template_name = 'recipes/search_by_tag.html'
+#     context_object_name = 'tags'
+#
+#     def get_queryset(self):
+#         tag_name = self.kwargs['tag']
+#         tag = models.Tag.objects.get(name=tag_name)
+#         return models.Recipe.objects.filter(tags=tag)
+#
+#     def get_context_data(self, *, object_list=None, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['tag'] = self.kwargs['tag']
+#         return context
+#
+#     def get_success_url(self):
+#         return reverse_lazy('recipes-home')
 
 
 def user_recipes(request, username):

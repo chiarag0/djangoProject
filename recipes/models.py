@@ -33,6 +33,17 @@ class Ingredient(models.Model):
         app_label = 'recipes'
 
 
+class Tag(models.Model):
+    recipe = models.ForeignKey('recipes.Recipe', on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        app_label = 'recipes'
+
+
 class Recipe(models.Model):
     title = models.CharField(max_length=200)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -40,6 +51,7 @@ class Recipe(models.Model):
     description = models.TextField()
     ingredients = models.ManyToManyField(Ingredient, related_name='recipes')
     instructions = models.ManyToManyField('Instruction', related_name='recipes', blank=True, null=True)
+    tags = models.ManyToManyField(Tag, related_name='recipes', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -61,12 +73,3 @@ class Instruction(models.Model):
         app_label = 'recipes'
 
 
-# class Tag(models.Model):
-#     recipe = models.ForeignKey('recipes.Recipe', on_delete=models.CASCADE, null=True)
-#     name = models.CharField(max_length=100)
-#
-#     def __str__(self):
-#         return self.name
-#
-#     class Meta:
-#         app_label = 'recipes'

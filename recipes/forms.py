@@ -1,7 +1,7 @@
 from django import forms
 from jsonschema.exceptions import ValidationError
 
-from .models import Recipe, Ingredient, Instruction
+from .models import Recipe, Ingredient, Instruction, Tag
 
 
 class RecipeForm(forms.ModelForm):
@@ -18,6 +18,7 @@ class IngredientForm(forms.ModelForm):
         model = Ingredient
         fields = ['name', 'quantity']
 
+
 class InstructionForm(forms.ModelForm):
     step = forms.CharField(widget=forms.TextInput(attrs={'class': 'custom-input'}))
 
@@ -25,8 +26,8 @@ class InstructionForm(forms.ModelForm):
         model = Instruction
         fields = ['step']
 
-# class TagForm(forms.ModelForm):
-#     class Meta:
-#         model = Tag
-#         fields = ['tag']
 
+class TagForm(forms.ModelForm):
+    class Meta:
+        model = Tag
+        fields = ['name']

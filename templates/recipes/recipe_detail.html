@@ -2,14 +2,16 @@
 
 <!-- -->
 {% block content %}
-<h1>Recipe # {{object.id}}</h1>
+<h1>{{ object.title}}</h1>
 <div class="card my-4">
   <div class="card-body">
-    <h5 class="card-title">{{ object.title }}</h5>
 
     <h6 class="card-subtitle mb-2 text-muted">{{ recipe.author }}</h6>
     <p class="card-text">{{ recipe.category }}</p>
-    <p class="card-text">{{ recipe.description }}</p>
+    <p class="card-text">
+         <h3>Description:</h3>
+         <p>{{ recipe.description }} </p>
+    </p>
     <p class="card-text">
         <h3>Ingredients:</h3>
         {% for ingredient in ingredients %}
@@ -19,10 +21,15 @@
 
     <p class="card-text">
         <h3>Instructions:</h3>
-        {% for instruction in ingredients %}
+        {% for instruction in instructions %}
+            <p>{{ instruction }}</p>
+        {% endfor %}
+        {% for instruction in recipe.instructions.all %}
             <p>{{ instruction }}</p>
         {% endfor %}
     </p>
+
+
 
     <h6 class="card-subtitle mb-2 text-muted">
       {{ recipe.updated_at|date:"F d, Y" }}
