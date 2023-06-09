@@ -52,6 +52,7 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(Ingredient, related_name='recipes')
     instructions = models.ManyToManyField('Instruction', related_name='recipes', blank=True, null=True)
     tags = models.ManyToManyField(Tag, related_name='recipes', blank=True)
+    favorites = models.ManyToManyField(User, related_name='favorites', default= None, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

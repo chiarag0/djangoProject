@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect
-
+from recipes.models import Recipe
 
 from recipes.models import Recipe
 from . import forms
@@ -27,6 +27,19 @@ def profile(request):
     recipes = Recipe.objects.filter(author=request.user)
     return render(request, 'users/profile.html', {'recipes': recipes})
 
+@login_required()
+def favorite_list(request):
+    favorites = request.user.favorites.all()
+    return render(request, 'users/favorites.html', {'favorites': favorites})
+
+@login_required()
+def add_to_favorites(request, id):
+    recipe = get_object_or_404(Recipe, id=id)
+    if recipe.favorites.filter(id=request.user.id).exists():
+        recipe.favorites.remove(request.user)
+    else:
+        recipe.favorites.add(request.user)
+    return redirect('recipe-detail', id=id)
 
 '''
 @login_required
@@ -39,3 +52,4 @@ def add_to_favorites(request, pk):
 def view_favorites(request):
     favorites = request.user.favorites.all()
     return render(request, 'recipes/../templates/users/favorites.html', {'favorites': favorites}) '''
+

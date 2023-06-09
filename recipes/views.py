@@ -1,13 +1,14 @@
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from . import models
-from .forms import RecipeForm, IngredientForm
+from .forms import RecipeForm, IngredientForm, TagForm
 from django.contrib.auth.decorators import login_required
 
 from .models import Recipe, Ingredient
@@ -36,18 +37,24 @@ def recipe_list(request):
 
 
 # Create your views here.
+
 def home(request):
     recipes = models.Recipe.objects.all()
+    tags = models.Tag.objects.all()
     context = {
-       'recipes': recipes
-          }
+        'recipes': recipes,
+        'tags': tags,
+    }
     return render(request, 'recipes/home.html', context)
+
 
 
 class RecipeListView(ListView):
     model = models.Recipe
     template_name = 'recipes/home.html'
     context_object_name = 'recipes'
+    ordering = ['-created_at']
+    paginate_by = 5
 
 
 class RecipeDetailView(DetailView):
@@ -73,7 +80,7 @@ class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = models.Recipe
-    fields = ['title', 'author', 'category', 'description']
+    fields = ['title', 'category', 'description']
     template_name = 'recipes/create_recipe_start.html'
 
     def __init__(self):
@@ -84,6 +91,15 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         self.object = form.save()
         return super().form_valid(form)
+    def form_invalid(self, form):
+        # Print form errors
+        print(form.errors)
+
+        # Print non-field errors
+        print(form.non_field_errors())
+
+        # Return the default behavior
+        return super().form_invalid(form)
 
     def get_success_url(self):
         pk = self.object.pk
@@ -244,12 +260,8 @@ class TagsCreateView(CreateView):
         return context
 
     def form_valid(self, form):
-        recipe_pk = self.kwargs['pk']
-        recipe = models.Recipe.objects.get(pk=recipe_pk)
-        tag = form.save(commit=False)
-        tag.recipe = recipe
-        tag.save()
         return super().form_valid(form)
+
 
     #print errors if form not valid
     def form_invalid(self, form):
@@ -289,23 +301,28 @@ class TagsListView(ListView):
         return reverse_lazy('recipes-detail', kwargs={'pk': recipe_pk})
 
 
-# class SearchByTag(ListView):   #TODO!!!!!!!!!!!!!!!!!!!!!!!
-#     model = models.Tag
-#    # template_name = 'recipes/search_by_tag.html'
-#     context_object_name = 'tags'
-#
-#     def get_queryset(self):
-#         tag_name = self.kwargs['tag']
-#         tag = models.Tag.objects.get(name=tag_name)
-#         return models.Recipe.objects.filter(tags=tag)
-#
-#     def get_context_data(self, *, object_list=None, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['tag'] = self.kwargs['tag']
-#         return context
-#
-#     def get_success_url(self):
-#         return reverse_lazy('recipes-home')
+class SearchByTag(ListView):
+    model = models.Recipe
+    template_name = 'recipes/search_by_tag.html'
+    context_object_name = 'recipe_list'
+
+    def get_queryset(self):
+        tag_name = self.request.GET.get('tag_name')
+        print(f"Tag name: {tag_name}")
+        if tag_name:
+            queryset = models.Recipe.objects.filter(tags__name=tag_name)
+            print(f"Filtered queryset: {queryset}")
+            return queryset
+        return models.Recipe.objects.none()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tag_name = self.request.GET.get('tag_name')
+        if tag_name:
+            context['tag_name'] = tag_name
+        return context
+
+
 
 
 def user_recipes(request, username):

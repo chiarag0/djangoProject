@@ -10,6 +10,7 @@ class RecipeForm(forms.ModelForm):
         fields = ['title', 'author', 'category', 'description', 'ingredients', 'instructions']
 
 
+
 class IngredientForm(forms.ModelForm):
     name = forms.CharField(widget=forms.TextInput(attrs={'class': 'custom-input'}))
     quantity = forms.CharField(widget=forms.TextInput(attrs={'class': 'custom-input'}))

@@ -1,7 +1,30 @@
 {% extends "recipes/base.html" %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
 <!-- -->
 {% block content %}
-<h1>Try one of these delicious recipes!</h1>
+    <div class="logo" style="display: flex; flex-direction: column; flex-wrap: wrap; align-content: center; padding: 20px; border: 1px solid orange; margin-bottom: 30px;">
+        <div style="width: max-content;padding-left: 30px">
+             <img src="https://see.fontimg.com/api/renderfont4/lg2Bw/eyJyIjoiZnMiLCJoIjoxMDEsInciOjEwMDAsImZzIjoxMDEsImZnYyI6IiNGRjhEMzQiLCJiZ2MiOiIjRkZGRkZGIn0/VGFzdGVCdWRz/feelfree-personal-use-regular.png" class="img-fluid" alt="Responsive image">
+        </div>
+        <div style="margin-top: 20px; width: max-content;">
+             <img src="https://see.fontimg.com/api/renderfont4/q3pd/eyJyIjoiZnMiLCJoIjoxMiwidyI6MTAwMCwiZnMiOjEyLCJmZ2MiOiIjRkY4RDM0IiwiYmdjIjoiI0ZGRkZGRiJ9/IFNIQVJFIEFORCBESVNDT1ZFUiBERUxJQ0lPVVMgUkVDSVBFUyBXSVRIIFRBU1RFQlVEUw/swansea.png" class="img-fluid">
+        </div>
+    </div>
+<h1>Tell us what you're looking for ...</h1>
+<div class="card my-4">
+    <div class="card-subtitle mb-2 text-muted" style="margin-top: 10px; margin-left: 10px;"> Write a keyword to describe the recipe you'd like to find: try to use the name of a main ingredient (ex: chicken), a flavour (ex: sweet) or a diet (ex: vegan) </div>
+    <div class="col-md d-flex justify-content-between" id="searchtags" style="margin-left: 10px;" >
+        <form method="GET" action="{% url 'search-by-tag' %}">
+          {% csrf_token %}
+          <input type="text" name="tag_name" placeholder="Enter tag name">
+          <button type="submit">Search</button>
+        </form>
+    </div>
+
+</div>
+
+<h1>... or try one of these delicious recipes!</h1>
 {% for recipe in recipes %}
 <div class="card my-4">
   <div class="card-body">

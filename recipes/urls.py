@@ -1,5 +1,5 @@
 
-from django.urls import path, include
+from django.urls import path, include, re_path
 from . import views
 
 urlpatterns = [
@@ -15,5 +15,6 @@ urlpatterns = [
     path('recipe/<int:pk>/update', views.RecipeUpdateView.as_view(), name="recipes-update"),
     path('recipe/<int:pk>/delete', views.RecipeDeleteView.as_view(), name="recipes-delete"),
     path('user/<str:username>/', views.user_recipes, name='user_recipes'),
-    path('search/', views.SearchByTag, name='search-by-tag'),
+    path('search/', views.SearchByTag.as_view(), name='search-by-tag'),
+
 ]

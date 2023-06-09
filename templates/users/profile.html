@@ -4,7 +4,7 @@
 <!-- -->
 {% load crispy_forms_tags %}
 <!-- -->
-<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+<link rel="stylesheet" type="text/css" href="{% static 'style.css' %}"/>
 
 {% block content %}
 <div class="profile_container">
@@ -13,18 +13,29 @@
         <div class="card my-4">
           <h2>Recipes created by me</h2>
             {% if recipes %}
-              <ul>
                 {% for recipe in recipes %}
-                <li><a href="{% url 'recipes-detail' recipe.pk %}">{{ recipe.title }}</a></li>
+                <div class="card-body d-flex justify-content-between">
+                    <div>
+                        <h3 class="card-title">{{ recipe.title }}</h3>
+                        <p class="card-text">{{ recipe.description }}</p>
+                    </div>
+                    <div>
+                        <a href="{% url 'recipes-detail' recipe.pk %}" class="btn btn-outline-dark">View Recipe</a>
+                    </div>
+            </div>
                 {% endfor %}
-              </ul>
             {% else %}
                 <h4>Looks like you haven't created any recipes yet!</h4>
             {% endif %}
-        <a href="{% url 'view-favorites' %}">View Favorites</a>
-        </div>
-</div>
 
+
+
+
+
+   </div>
+
+</div>
+{% include 'users/favorites.html' %}
 <!-- -->
 {% endblock content %}
 
