@@ -10,3 +10,4 @@ psycopg2~=2.9.6
 requests~=2.31.0
 jsonschema~=4.17.3
 django-crispy-forms~=2.0
+gunicorn
