@@ -19,20 +19,34 @@
          <h3>Description:</h3>
          <p>{{ recipe.description }} </p>
     </p>
+
     <p class="card-text">
         <h3>Ingredients:</h3>
-        {% for ingredient in ingredients %}
-            <p>{{ ingredient }}</p>
-        {% endfor %}
+
+      {% for ingredient in ingredients %}
+          <div style="display: flex; flex-direction: row">
+              <p style="padding-right:20px">{{ ingredient.name }}</p>
+              <p>{{ ingredient.quantity }}</p>
+          </div>
+      {% endfor %}
+  
     </p>
 
     <p class="card-text">
-        <h3>Instructions:</h3>
-        {% for instruction in instructions %}
-            <p>{{ instruction }}</p>
-        {% endfor %}
-        {% for instruction in recipe.instructions.all %}
-            <p>{{ instruction }}</p>
+      <h3>Instructions:</h3>
+      <div style="display:flex; flex-direction: column">
+          {% for instruction in instructions %}
+              <div style="display: flex; flex-direction: row">
+                  <p>{{ instruction.step }}</p>
+              </div>
+          {% endfor %}
+      </div>
+    </p>
+
+    <p class="card-text">
+        <h3>Tags:</h3>
+        {% for tag in recipe.tags.all %}
+            <p>{{ tag }}</p>
         {% endfor %}
     </p>
 

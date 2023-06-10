@@ -13,14 +13,14 @@
     </div>
 <h1>Tell us what you're looking for ...</h1>
 <div class="card my-4">
-    <div class="card-subtitle mb-2 text-muted" style="margin-top: 10px; margin-left: 10px;"> Write a keyword to describe the recipe you'd like to find: try to use the name of a main ingredient (ex: chicken), a flavour (ex: sweet) or a diet (ex: vegan) </div>
-    <div class="col-md d-flex justify-content-between" id="searchtags" style="margin-left: 10px;" >
-        <form method="GET" action="{% url 'search-by-tag' %}">
-          {% csrf_token %}
-          <input type="text" name="tag_name" placeholder="Enter tag name">
+    <div class="card-subtitle mb-2 text-muted" style="margin-top: 10px; margin-left: 10px;"> Write a keyword to describe the recipe you'd like to find: try to use the name of a main ingredient (ex: chicken), a flavour (ex: sweet), a diet (ex: vegan) or a cuisine (ex: italian) </div>
+    <div class="col-md d-flex justify-content-between" id="searchtitle" style="margin-left: 10px;" >
+        <form method="GET" action="{% url 'search-by-title' %}">
+          <input type="text" name="query" placeholder="Search by title">
           <button type="submit">Search</button>
         </form>
     </div>
+
 
 </div>
 

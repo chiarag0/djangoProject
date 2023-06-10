@@ -8,33 +8,10 @@ from django.contrib.auth.models import User
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 from . import models
-from .forms import RecipeForm, IngredientForm, TagForm
+from .forms import RecipeForm, IngredientForm
 from django.contrib.auth.decorators import login_required
 
 from .models import Recipe, Ingredient
-
-""""
-def create_recipe(request):
-    if request.method == 'POST':
-        form = RecipeForm(request.POST)
-        if form.is_valid():
-            # Process the form data and save the new recipe
-            form.save()
-            # Redirect to a success page or display a success message
-            return redirect('recipe_list')
-    else:
-        form = RecipeForm()
-
-    return render(request, 'recipes/create_recipe.html', {'form': form})
-
-
-
-def recipe_list(request):
-    recipes = Recipe.objects.all()
-    return render(request, 'recipes/recipe_list.html', {'recipes': recipes})
-    
-    """
-
 
 # Create your views here.
 
@@ -91,6 +68,7 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
         form.instance.author = self.request.user
         self.object = form.save()
         return super().form_valid(form)
+
     def form_invalid(self, form):
         # Print form errors
         print(form.errors)
@@ -193,46 +171,9 @@ class InstructionsListView(ListView):
 
     def get_success_url(self):
         recipe_pk = self.kwargs['pk']
-        return reverse_lazy('tags-list', kwargs={'pk': recipe_pk})
-
-'''
-
-class RecipeCreateView(LoginRequiredMixin, CreateView):
-    model = models.Recipe
-    form_class = RecipeForm
-    template_name = 'recipes/create_recipe.html'
+        return reverse_lazy('recipes-detail', kwargs={'pk': recipe_pk})
 
 
-    def form_valid(self, form):
-        recipe = form.save(commit=False)
-        recipe.author = self.request.user
-        recipe.save()
-
-        ingredient_names = self.request.POST.getlist('name')
-        ingredient_quantities = self.request.POST.getlist('quantity')
-
-        for name, quantity in zip(ingredient_names, ingredient_quantities):
-            if name:
-                ingredient = models.Ingredient(name=name, quantity=quantity)
-                ingredient.save()
-                recipe.ingredients.add(ingredient)
-
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('recipes-home')
-
-    def form_invalid(self, form):
-        # Print form errors
-        print(form.errors)
-
-        # Print non-field errors
-        print(form.non_field_errors())
-
-        # Return the default behavior
-        return super().form_invalid(form)
-
-'''
 
 
 class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
@@ -249,80 +190,16 @@ class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return super().form_valid(form)
 
 
-class TagsCreateView(CreateView):
-    model = models.Tag
-    fields = ['name']
-    template_name = 'recipes/create_recipe_tags.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['recipe'] = models.Recipe.objects.get(pk=self.kwargs['pk'])
-        return context
-
-    def form_valid(self, form):
-        return super().form_valid(form)
 
 
-    #print errors if form not valid
-    def form_invalid(self, form):
-        # Print form errors
-        print(form.errors)
 
-        # Print non-field errors
-        print(form.non_field_errors())
-
-        # Return the default behavior
-        return super().form_invalid(form)
-
-    def get_success_url(self):
-        return reverse_lazy('tags-list', kwargs={'pk': self.kwargs['pk']})
-
-
-class TagsListView(ListView):
-    model = models.Tag
-    template_name = 'recipes/tags_list.html'
-    context_object_name = 'tags'
-
-    def get_queryset(self):
-        recipe_pk = self.kwargs['pk']
-        recipe = models.Recipe.objects.get(pk=recipe_pk)
-        return models.Tag.objects.filter(recipe=recipe)
-
-    def get_context_data(self, *, object_list=None, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['recipe'] = models.Recipe.objects.get(pk=self.kwargs['pk'])
-        recipe_pk = self.kwargs['pk']
-        recipe = models.Recipe.objects.get(pk=recipe_pk)
-        context['tags'] = models.Tag.objects.filter(recipe=recipe)
-        return context
-
-    def get_success_url(self):
-        recipe_pk = self.kwargs['pk']
-        return reverse_lazy('recipes-detail', kwargs={'pk': recipe_pk})
-
-
-class SearchByTag(ListView):
-    model = models.Recipe
-    template_name = 'recipes/search_by_tag.html'
-    context_object_name = 'recipe_list'
-
-    def get_queryset(self):
-        tag_name = self.request.GET.get('tag_name')
-        print(f"Tag name: {tag_name}")
-        if tag_name:
-            queryset = models.Recipe.objects.filter(tags__name=tag_name)
-            print(f"Filtered queryset: {queryset}")
-            return queryset
-        return models.Recipe.objects.none()
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        tag_name = self.request.GET.get('tag_name')
-        if tag_name:
-            context['tag_name'] = tag_name
-        return context
-
-
+def SearchByTitle(request):
+    query = request.GET.get('query')
+    if query:
+        recipes = Recipe.objects.filter(title__icontains=query)
+    else:
+        recipes = Recipe.objects.none()
+    return render(request, 'recipes/search_by_title.html', {'recipes': recipes, 'query': query})
 
 
 def user_recipes(request, username):
