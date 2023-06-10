@@ -1,0 +1,12 @@
+Django~=4.2.2
+pip~=23.1.2
+attrs~=23.1.0
+wheel~=0.38.4
+Pillow~=9.5.0
+setuptools~=65.5.1
+asgiref~=3.7.2
+sqlparse~=0.4.4
+psycopg2~=2.9.6
+requests~=2.31.0
+jsonschema~=4.17.3
+django-crispy-forms~=2.0
