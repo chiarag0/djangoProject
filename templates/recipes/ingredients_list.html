@@ -1,0 +1,38 @@
+{% extends 'recipes/base.html' %}
+{% block content %}
+
+<form method="POST" action="{% url 'ingredients-create' recipe.pk %}" class="my-form">
+    {% csrf_token %}
+    <h2 class="form-title">Create Recipe</h2>
+
+    <div class="card my-4 d-flex" style="padding: 10px; justify-content: center">
+        <div class="form-field">
+            <h3>Add your ingredients and the respective amounts</h3>
+            <p>You can add more steps by clicking the "Add Ingredient" button.</p>
+
+
+            <div class="form-group" style="display: flex; flex-direction: row">
+                <label for="id_ingredient" style="font-size: 18px; padding-right: 30px">Ingredients added: </label>
+                <div style="display:flex; flex-direction: column">
+                    {% for ingredient in ingredients %}
+                        <div style="display: flex; flex-direction: row">
+                            <p style="padding-right:20px">{{ ingredient.name }}</p>
+                            <p>{{ ingredient.quantity }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        <!--- TODO -->
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top: 15px">
+            <input type="submit" style="background-color: #f1711b; border-color: #f1711b" value="Add Ingredient" class="btn btn-primary">
+            <a href="{% url 'instructions-list' recipe.pk %}" class="btn btn-primary">Next >></a>
+        </div>
+    </div>
+</form>
+
+
+{% endblock content %}
+
+

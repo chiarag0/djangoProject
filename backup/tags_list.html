@@ -1,0 +1,36 @@
+{% extends 'recipes/base.html' %}
+{% block content %}
+
+<form method="POST" action="{% url 'tags-create' recipe.pk %}" class="my-form">
+    {% csrf_token %}
+    <h2 class="form-title">Create Recipe</h2>
+
+    <div class="card my-4 d-flex" style="padding: 10px; justify-content: center">
+        <div class="form-field">
+            <h3>Add some tags to your recipe! </h3>
+            <p> Use the name of a main ingredient (ex: chicken), a flavour (ex: sweet), a diet (ex: vegan) or a cuisine (ex: italian). The more tags you add, the easier it will be for other users to find your recipe!</p>
+            <p>You can add more tags by clicking the "Add Tag" button.</p>
+
+            <div class="form-group" style="display: flex; flex-direction: row">
+                <label for="id_tag" style="font-size: 18px; padding-right: 30px">Tags added: </label>
+                <div style="display:flex; flex-direction: column">
+                    {% for tag in tags %}
+                        <div style="display: flex; flex-direction: row">
+                            <p >{{ tag.name }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+        <div style="display: flex; justify-content: space-between;margin-top:10px">
+            <input type="submit" style="background-color: #f1711b; border-color: #f1711b" value="Add Tag" class="btn btn-primary">
+            <a href="{% url 'recipes-detail' recipe.pk %}" class="btn btn-primary">Done!</a>
+        </div>
+    </div>
+</form>
+
+
+{% endblock content %}
+
+

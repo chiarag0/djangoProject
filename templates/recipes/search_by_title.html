@@ -1,0 +1,26 @@
+{% extends 'recipes/base.html' %}
+
+{% block content %}
+<h1>Search Results for "{{ query }}"</h1>
+
+{% if recipes %}
+    <div class="card my-4">
+        {% for recipe in recipes %}
+            <div class="card-body d-flex justify-content-between">
+                <div>
+                    <h3 class="card-title">{{ recipe.title }}</h3>
+                    <p class="card-text">{{ recipe.description }}</p>
+                </div>
+                <div>
+                    <a href="{% url 'recipes-detail' recipe.pk %}" class="btn btn-outline-dark">View Recipe</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+  <p>Sorry! No recipes found with the specified title.</p>
+{% endif %}
+
+<a href="{% url 'recipes-home' %}">Back to Home</a>
+{% endblock %}
+

@@ -1,0 +1,30 @@
+.navbar a {
+    padding-right: 30px;
+}
+
+.navbar-nav .nav-link {
+    color: white;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #F5EDC5;
+}
+
+h1 {
+    color: #F47324 !important;
+}
+
+
+h2 {
+    color: #FFC107 !important;
+    padding: 15px 10px !important;
+}
+
+.profile_container a {
+    color: black !important;
+    text-decoration: none !important;
+}
+
+.profile_container a:hover {
+    color: #FFC107 !important;
+}

@@ -1,0 +1,37 @@
+{% extends 'recipes/base.html' %}
+{% block content %}
+
+<form method="POST" action="{% url 'instructions-create' recipe.pk %}" class="my-form">
+    {% csrf_token %}
+    <h2 class="form-title">Create Recipe</h2>
+    <div class="card my-4 d-flex" style="padding: 10px; justify-content: center">
+        <div class="form-field">
+            <h3>Write the steps of your instructions</h3>
+            <p>You can add more steps by clicking the "Add Step" button.</p>
+            <!--- TODO -->
+
+            <div class="form-group" style="display: flex; flex-direction: row">
+                <label for="id_step" style="font-size: 18px; padding-right: 30px">Steps added: </label>
+                <div style="display:flex; flex-direction: column">
+                    {% for instruction in instructions %}
+                        <div style="display: flex; flex-direction: row">
+                            <p >{{ instruction.step }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-top:10px">
+            <input type="submit" style="background-color: #f1711b; border-color: #f1711b"  value="Add Step" class="btn btn-primary">
+            <a href="{% url 'recipes-detail' recipe.pk %}" class="btn btn-primary">Next >></a>
+        </div>
+
+    </div>
+</form>
+
+
+{% endblock content %}
+
+

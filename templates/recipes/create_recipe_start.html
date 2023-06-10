@@ -1,0 +1,38 @@
+{% extends 'recipes/base.html' %}
+
+{% block content %}
+  <form method="POST" action="{% url 'recipes-create' %}" class="my-form">
+    {% csrf_token %}
+    <h2 class="form-title">Create Recipe</h2>
+    <div class="card my-4 d-flex">
+        <div class="card-form" style="padding: 15px;">
+            <div class="form-field">
+              <h3> Let's start by writing the title of your recipe!</h3>
+              {{ form.title }}
+            </div>
+
+
+            <div class="form-field"  style="display: flex; flex-direction: row;">
+                <div style="margin-right: 30px">
+                    <h3> Select the difficulty of your recipe:</h3>
+                </div>
+                <div style="padding-top: 5px;">
+                    {{ form.category }}
+                </div>
+            </div>
+
+            <div class="form-field" >
+              <h3> Now, give us a brief description! </h3>
+              <div style="width: 100%;">
+                  {{ form.description }}
+              </div>
+            </div>
+            <div style="display: flex; flex-direction: row-reverse">
+                <input type="submit" style="margin-top: 15px" value="Next >>" class="btn btn-primary">
+            </div>
+        </div>
+    </div>
+  </form>
+
+
+{% endblock content %}

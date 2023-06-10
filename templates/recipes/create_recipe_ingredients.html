@@ -1,0 +1,32 @@
+{% extends 'recipes/base.html' %}
+{% block content %}
+
+<form method="POST" action="{% url 'ingredients-create' recipe.pk %}" class="my-form">
+    {% csrf_token %}
+    <h2 class="form-title">Create Recipe</h2>
+
+    <div class="card my-4 d-flex" style="padding: 10px; justify-content: center">
+        <div class="form-field" style="display:flex; flex-direction: column;">
+            <h3 style="margin-bottom:20px">Add your ingredients and the respective amounts</h3>
+
+            <div id="ingredient-container" style="width: min-content">
+                <div class="ingredient-field" style="width: min-content">
+                    <div class="ingredient-input" style="display: flex; flex-direction: row; width: min-content">
+                        <label for="id_name" style="margin-right: 10px">Ingredient:</label>
+                        {{ form.name }}
+                    </div>
+                    <div class="ingredient-input" style="display: flex; flex-direction: row; margin-top: 20px; width: min-content">
+                        <label for="id_quantity" style="margin-right: 20px">Quantity:</label>
+                        {{ form.quantity }}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <input type="submit" style="background-color: #f1711b; border-color: #f1711b;margin-top:20px; width:min-content" value="Add ingredient" class="btn btn-primary">
+    </div>
+</form>
+
+{% endblock content %}
+
+

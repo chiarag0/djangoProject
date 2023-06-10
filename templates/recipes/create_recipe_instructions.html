@@ -1,0 +1,23 @@
+{% extends 'recipes/base.html' %}
+
+{% block content %}
+
+    <form method="POST" action="{% url 'instructions-create' recipe.pk %}" class="my-form">
+    {% csrf_token %}
+    <h2 class="form-title">Create Recipe</h2>
+
+    <div class="card my-4 d-flex" style="padding: 10px; justify-content: center">
+        <div class="form-field">
+            <h3 style="margin-bottom:20px">Write the steps of your instructions</h3>
+            <div id="instruction-container">
+                <label for="id_step" style="margin-right:15px">Step:</label>
+                <input type="text" name="step" id="id_step">
+            </div>
+        </div>
+        <input type="submit" style="background-color: #f1711b; border-color: #f1711b; margin-top:20px; width: min-content"  value="Add step" class="btn btn-primary">
+    </div>
+</form>
+
+
+{% endblock %}
+
