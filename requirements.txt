@@ -3,10 +3,8 @@ attrs==23.1.0
 bootstrap4==0.1.0
 certifi==2023.5.7
 charset-normalizer==3.1.0
-cloudinary==1.33.0
 dj-database-url==0.5.0
 Django==4.2.2
-django-cloudinary-storage==0.3.0
 django-crispy-forms==2.0
 docopt==0.6.2
 gunicorn==20.1.0
