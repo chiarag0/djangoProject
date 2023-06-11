@@ -43,14 +43,6 @@
       </div>
     </p>
 
-    <p class="card-text">
-        <h3>Tags:</h3>
-        {% for tag in recipe.tags.all %}
-            <p>{{ tag }}</p>
-        {% endfor %}
-    </p>
-
-
 
     <h6 class="card-subtitle mb-2 text-muted">
       {{ recipe.updated_at|date:"F d, Y" }}
