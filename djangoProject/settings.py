@@ -139,7 +139,9 @@ USE_I18N = True
 
 USE_TZ = True
 
-
+# Database
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 
 
 # Default primary key field type
