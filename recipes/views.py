@@ -42,6 +42,7 @@ class RecipeDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['ingredients'] = Ingredient.objects.filter(recipe=self.object)
+        context['instructions'] = models.Instruction.objects.filter(recipe=self.object)
         return context
 
 
