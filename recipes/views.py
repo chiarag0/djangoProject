@@ -49,7 +49,7 @@ class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         recipe = self.get_object()
-        return self.request.user == recipe.author
+        return self.request.user == recipe.author or self.request.user.is_superuser
 
 
 class RecipeCreateView(LoginRequiredMixin, CreateView):
