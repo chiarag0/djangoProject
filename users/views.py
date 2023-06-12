@@ -1,3 +1,4 @@
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -37,9 +38,12 @@ def add_to_favorites(request, id):
     recipe = get_object_or_404(Recipe, id=id)
     if recipe.favorites.filter(id=request.user.id).exists():
         recipe.favorites.remove(request.user)
+        messages.success(request, f"{recipe.title} has been removed from your favorites.")
     else:
         recipe.favorites.add(request.user)
-    return redirect('recipe-detail', id=id)
+        messages.success(request, f"{recipe.title} has been added to your favorites.")
+    # go back to the recipe detail page
+    return HttpResponseRedirect(recipe.get_absolute_url())
 
 '''
 @login_required()
