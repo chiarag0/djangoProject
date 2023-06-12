@@ -1,12 +1,11 @@
 from django.forms import formset_factory, inlineformset_factory
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views import View
+
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+
 from . import models
 from .forms import RecipeForm, IngredientForm
 from django.contrib.auth.decorators import login_required
@@ -15,15 +14,13 @@ from .models import Recipe, Ingredient
 
 # Create your views here.
 
+
 def home(request):
     recipes = models.Recipe.objects.all()
-    tags = models.Tag.objects.all()
     context = {
         'recipes': recipes,
-        'tags': tags,
     }
     return render(request, 'recipes/home.html', context)
-
 
 
 class RecipeListView(ListView):
@@ -44,7 +41,6 @@ class RecipeDetailView(DetailView):
         context['ingredients'] = Ingredient.objects.filter(recipe=self.object)
         context['instructions'] = models.Instruction.objects.filter(recipe=self.object)
         return context
-
 
 
 class RecipeDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -173,8 +169,6 @@ class InstructionsListView(ListView):
     def get_success_url(self):
         recipe_pk = self.kwargs['pk']
         return reverse_lazy('recipes-detail', kwargs={'pk': recipe_pk})
-
-
 
 
 def SearchByTitle(request):

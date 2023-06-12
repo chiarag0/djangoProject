@@ -28,10 +28,12 @@ def profile(request):
     recipes = Recipe.objects.filter(author=request.user)
     return render(request, 'users/profile.html', {'recipes': recipes})
 
+
 @login_required()
 def favorite_list(request):
     favorites = request.user.favorites.all()
     return render(request, 'users/favorites.html', {'favorites': favorites})
+
 
 @login_required()
 def add_to_favorites(request, id):
@@ -42,18 +44,4 @@ def add_to_favorites(request, id):
     else:
         recipe.favorites.add(request.user)
         messages.success(request, f"{recipe.title} has been added to your favorites.")
-    # go back to the recipe detail page
     return HttpResponseRedirect(recipe.get_absolute_url())
-
-'''
-@login_required()
-def add_to_favorites(request, pk):
-    recipe = get_object_or_404(Recipe, pk=pk)
-    request.user.favorites.add(recipe)
-    return redirect('recipe-detail', pk=pk)
-
-
-def view_favorites(request):
-    favorites = request.user.favorites.all()
-    return render(request, 'recipes/../templates/users/favorites.html', {'favorites': favorites}) '''
-

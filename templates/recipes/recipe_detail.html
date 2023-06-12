@@ -6,7 +6,6 @@
 <div class="col-md d-flex justify-content-between">
     <h1>{{ object.title}}</h1>
     <div>
-        <!-- check if the user has this recipe in his favorites -->
         {% if user in object.favorites.all %}
             <a href="{% url 'add-to-favorites' recipe.id %}" class="btn btn-outline-secondary">Remove from Favorites</a>
         {% else %}
