@@ -42,7 +42,7 @@ def add_to_favorites(request, id):
     return redirect('recipe-detail', id=id)
 
 '''
-@login_required
+@login_required()
 def add_to_favorites(request, pk):
     recipe = get_object_or_404(Recipe, pk=pk)
     request.user.favorites.add(recipe)
