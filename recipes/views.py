@@ -176,23 +176,6 @@ class InstructionsListView(ListView):
 
 
 
-class RecipeUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = models.Recipe
-    fields = ['title', 'author', 'category', 'description', 'instructions']
-    template_name = 'recipes/update_recipe.html'   #TODO
-
-    def test_func(self):
-        recipe = self.get_object()
-        return self.request.user == recipe.author
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
-
-
-
-
-
 def SearchByTitle(request):
     query = request.GET.get('query')
     if query:
