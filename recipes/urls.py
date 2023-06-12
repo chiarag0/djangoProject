@@ -1,11 +1,10 @@
 
 from django.urls import path, include, re_path
 from . import views
-from users import views
+from users import views as user_views
 
 urlpatterns = [
     path('', views.RecipeListView.as_view(), name="recipes-home"),
-    path('', include('users.urls')),
     path('recipe/<int:pk>', views.RecipeDetailView.as_view(), name="recipes-detail"),
     path('recipe/create', views.RecipeCreateView.as_view(), name="recipes-create"),
     path('recipe/<int:pk>/ingredients/create/', views.IngredientsCreateView.as_view(), name="ingredients-create"),
@@ -15,5 +14,7 @@ urlpatterns = [
     path('recipe/<int:pk>/delete', views.RecipeDeleteView.as_view(), name="recipes-delete"),
     path('user/<str:username>/', views.user_recipes, name='user_recipes'),
     path('search-by-title/', views.SearchByTitle, name='search-by-title'),
+    # add path to add to favorites
+    path('fav/<int:id>', user_views.add_to_favorites, name='add-to-favorites'),
 
 ]
